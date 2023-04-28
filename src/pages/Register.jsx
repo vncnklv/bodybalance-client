@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useRegister } from "../hooks/useRegister";
 
 export default function Register() {
     const [userData, setUserData] = useState({
         username: '',
         password: '',
-        repeatPassword: '',
+        confirmPassword: '',
         email: '',
-        firstName: '',
+        name: '',
         lastName: '',
     });
+
+    const register = useRegister();
 
     const changeHandler = (e) => {
         setUserData(oldData => {
@@ -21,7 +24,7 @@ export default function Register() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(userData);
+        register.mutate(userData);
     }
 
     return (
@@ -41,19 +44,19 @@ export default function Register() {
                         <input type="password" name="password" onChange={changeHandler} value={userData.password} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="password" className="text-gray-700 text-sm mb-1">Repeat Password</label>
-                        <input type="password" name="repeatPassword" onChange={changeHandler} value={userData.repeatPassword} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" />
+                        <label htmlFor="confirmPassword" className="text-gray-700 text-sm mb-1">Repeat Password</label>
+                        <input type="password" name="confirmPassword" onChange={changeHandler} value={userData.confirmPassword} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" />
                     </div>
                 </div>
 
-                <label htmlFor="firstName" className="text-gray-700 text-sm mb-1">First Name</label>
-                <input type="text" name="firstName" onChange={changeHandler} value={userData.firstName} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" />
+                <label htmlFor="name" className="text-gray-700 text-sm mb-1">First Name</label>
+                <input type="text" name="name" onChange={changeHandler} value={userData.name} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" />
 
                 <label htmlFor="lastName" className="text-gray-700 text-sm mb-1">Last Name</label>
                 <input type="text" name="lastName" onChange={changeHandler} value={userData.lastName} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" />
 
 
-                <p className="text-red-500 text-sm text-center mb-4">Error message</p>
+                {register.isError && <p className="text-red-500 text-sm text-center mb-4">{register.error.message}</p>}
 
                 <input type="submit" value="REGISTER" className="bg-gradient-to-r from-primary to-secondary rounded-md px-20 py-4 text-white hover:cursor-pointer font-semibold" />
 
