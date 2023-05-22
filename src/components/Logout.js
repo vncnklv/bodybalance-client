@@ -7,8 +7,10 @@ export default function Logout() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        logout.mutate();
-        navigate('/');
-    }, []);
+        if (!logout.isLoading) {
+            logout.mutate();
+            navigate('/');
+        }
+    }, [logout, navigate]);
 
 }

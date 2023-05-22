@@ -6,11 +6,12 @@ import { useState } from "react";
 export const useUser = () => {
     const [user, setUser] = useState(null);
     const [isLogged, setIsLogged] = useState(false);
+    const { hasToken } = useToken();
 
     const userQuery = useQuery({
         queryKey: ['user'],
         queryFn: getUser,
-        enabled: isLogged,
+        enabled: hasToken,
         retry: false,
         onSuccess: (data) => {
             setUser(data);
@@ -22,5 +23,5 @@ export const useUser = () => {
         }
     });
 
-    return {user, isLogged, userQuery};
+    return { user, isLogged, userQuery };
 };
