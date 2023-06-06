@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import image from '../assets/home.png';
-import { useUser } from '../hooks/useUser';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/UserProvider';
 
 export default function Home() {
-    const { isLogged } = useUser();
+    const { isAuth } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isLogged) navigate('/dashboard');
-    }, [isLogged, navigate]);
+        if (isAuth) navigate('/dashboard');
+    }, [isAuth, navigate]);
 
     return (
         <div className="max-w-screen-xl m-auto">

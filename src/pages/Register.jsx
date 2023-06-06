@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useRegister } from "../hooks/useRegister";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/UserProvider";
 
 export default function Register() {
     const [userData, setUserData] = useState({
@@ -11,8 +11,9 @@ export default function Register() {
         name: '',
         lastName: '',
     });
-
-    const register = useRegister();
+    const [error, setError] = useState("");
+    const { register } = useAuth();
+    const navigate = useNavigate();
 
     const changeHandler = (e) => {
         setUserData(oldData => {
@@ -22,9 +23,14 @@ export default function Register() {
         });
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        register.mutate(userData);
+        try {
+            await register(userData);
+            navigate('/dashboard');
+        } catch (err) {
+            setError(err.message);
+        }
     }
 
     return (
@@ -55,8 +61,7 @@ export default function Register() {
                 <label htmlFor="lastName" className="text-gray-700 text-sm mb-1">Last Name</label>
                 <input type="text" name="lastName" onChange={changeHandler} value={userData.lastName} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" />
 
-
-                {register.isError && <p className="text-red-500 text-sm text-center mb-4">{register.error.message}</p>}
+                {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
                 <input type="submit" value="REGISTER" className="bg-gradient-to-r from-primary to-secondary rounded-md px-20 py-4 text-white hover:cursor-pointer font-semibold" />
 

@@ -5,7 +5,7 @@ const request = async (path, method, body) => {
         'Content-Type': 'application/json',
     };
 
-    const token = localStorage.getItem('token');
+    const token = JSON.parse(localStorage.getItem('token'));
 
     if (token) {
         headers['X-Authorization'] = token;

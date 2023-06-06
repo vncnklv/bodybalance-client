@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useLogin } from "../hooks/useLogin";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/UserProvider";
 
 export default function Login() {
     const [userData, setUserData] = useState({
         username: '',
         password: ''
     });
-    const login = useLogin();
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const { login } = useAuth();
 
     const changeHandler = (e) => {
         setUserData(oldData => {
@@ -17,9 +20,14 @@ export default function Login() {
         });
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        login.mutate(userData);
+        try {
+            await login(userData);
+            navigate('/dashboard');
+        } catch (err) {
+            setError(err.message);
+        }
     }
 
     return (
@@ -30,8 +38,8 @@ export default function Login() {
                 <input type="text" name="username" onChange={changeHandler} value={userData.username} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" />
                 <label htmlFor="password" className="text-gray-700 text-sm mb-1">Password</label>
                 <input type="password" name="password" onChange={changeHandler} value={userData.password} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" />
-                {login.isError && <p className="text-red-500 text-sm text-center mb-4">{login.error.message}</p>}
-                <input type="submit" disabled={login.isLoading} value="LOGIN" className="bg-gradient-to-r from-primary to-secondary rounded-md px-20 py-4 text-white hover:cursor-pointer font-semibold disabled:animate-pulse" />
+                {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
+                <input type="submit" value="LOGIN" className="bg-gradient-to-r from-primary to-secondary rounded-md px-20 py-4 text-white hover:cursor-pointer font-semibold disabled:animate-pulse" />
                 <p className="text-center mt-6 text-sm">Don’t have an account? Create one <Link to={'/register'} className="text-primary font-semibold">here</Link>.</p>
             </form>
         </div>
