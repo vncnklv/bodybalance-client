@@ -6,7 +6,7 @@ export default function Header() {
 
     return (
         <header className="h-16 shadow-md flex items-center justify-around mb-24">
-            <Link to={'/'} className="text-2xl text-primary font-bold">BodyBalance.</Link>
+            <Link to={isAuth ? '/dashboard' : '/'} className="text-2xl text-primary font-bold">BodyBalance.</Link>
 
             {isAuth
                 ? <div className="flex gap-2"><Link to={'/profile'} className="font-medium px-6 py-2 text-gray-800 hover:text-black">{user?.username}</Link>
