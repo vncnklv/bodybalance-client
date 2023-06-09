@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getUser, loginUser, logoutUser, registerUser } from '../services/auth';
 import { useToken } from '../hooks/useToken';
+import { useNavigate } from 'react-router';
 
 const Context = createContext({});
 
@@ -14,6 +15,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isAuth, setIsAuth] = useState(false);
     const { hasToken, setToken, removeToken } = useToken();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (hasToken && !user) {
@@ -21,10 +23,11 @@ export const AuthProvider = ({ children }) => {
                 setUser(() => data);
                 setIsAuth(() => true);
             }).catch(() => {
-                setToken(null);
+                removeToken();
+                navigate('/login');
             });
         }
-    }, [hasToken, setToken, user]);
+    }, [hasToken, removeToken, user, navigate]);
 
     const login = async (userData) => {
         try {
@@ -47,10 +50,10 @@ export const AuthProvider = ({ children }) => {
     }
 
     const logout = async () => {
-        await logoutUser();
-        setUser(() => null)
         setIsAuth(() => false);
+        await logoutUser();
         removeToken();
+        setUser(() => null)
     }
 
     return (
