@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { getUser, loginUser, logoutUser, registerUser } from '../services/auth';
 import { useToken } from '../hooks/useToken';
 import { useNavigate } from 'react-router';
+import { trackPromise } from 'react-promise-tracker';
 
 const Context = createContext({});
 
@@ -19,13 +20,15 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (hasToken && !user) {
-            getUser().then((data) => {
-                setUser(() => data);
-                setIsAuth(() => true);
-            }).catch(() => {
-                removeToken();
-                navigate('/login');
-            });
+            trackPromise(
+                getUser().then((data) => {
+                    setUser(() => data);
+                    setIsAuth(() => true);
+                }).catch(() => {
+                    removeToken();
+                    setIsAuth(() => false);
+                    navigate('/login');
+                }), 'user');
         }
     }, [hasToken, removeToken, user, navigate]);
 
@@ -33,7 +36,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const res = await loginUser(userData);
             setToken(res.token);
-            setIsAuth(true);
+            setIsAuth(() => true);
         } catch (err) {
             throw new Error(err.message);
         }
