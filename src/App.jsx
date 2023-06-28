@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom"
 import { ProtectedRoute } from "./components/ProtectedRoute"
-import { usePromiseTracker } from "react-promise-tracker";
 
 import Header from "./components/Header"
 import Home from "./pages/Home"
@@ -11,15 +10,18 @@ import Logout from "./components/Logout"
 import Dashboard from "./pages/Dashboard/Dashboard"
 import BodyInformation from "./pages/BodyInformation"
 import Profile from "./pages/Profile"
+import FoodList from "./pages/FoodList/FoodList";
+import { useAuth } from "./contexts/UserProvider";
 
 function App() {
-  const { promiseInProgress } = usePromiseTracker({ area: 'user' });
+  const { isLoading } = useAuth();
+
+  if (isLoading) return <div>User is Loading</div>
+
   return (
     <>
-      {promiseInProgress
-        ? <div>Loading</div>
-        : <>
           <Header />
+      <main className="max-w-screen-lg m-auto">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -32,8 +34,7 @@ function App() {
 
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </>
-      }
+      </main>
     </>
   )
 }

@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { getUser, loginUser, logoutUser, registerUser } from '../services/auth';
 import { useToken } from '../hooks/useToken';
 import { useNavigate } from 'react-router';
-import { trackPromise } from 'react-promise-tracker';
 
 const Context = createContext({});
 
@@ -14,21 +13,28 @@ export const useAuth = () => {
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [isAuth, setIsAuth] = useState(false);
+    const [isAuth, setIsAuth] = useState(undefined);
+    const [isLoading, setIsLoading] = useState(true);
     const { hasToken, setToken, removeToken } = useToken();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (hasToken && !user) {
-            trackPromise(
-                getUser().then((data) => {
-                    setUser(() => data);
-                    setIsAuth(() => true);
-                }).catch(() => {
-                    removeToken();
-                    setIsAuth(() => false);
-                    navigate('/login');
-                }), 'user');
+            setIsLoading(true);
+            getUser().then((data) => {
+                setIsAuth(() => true);
+                setUser(() => data);
+                setIsLoading(false);
+            }).catch(() => {
+                removeToken();
+                setIsAuth(() => false);
+                navigate('/login');
+                setIsLoading(false);
+            });
+        }
+
+        if (!hasToken) {
+            setIsLoading(false);
         }
     }, [hasToken, removeToken, user, navigate]);
 
@@ -60,7 +66,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <Context.Provider value={{ isAuth, user, login, register, logout }}>
+        <Context.Provider value={{ isAuth, user, login, register, logout, isLoading }}>
             {children}
         </Context.Provider>
     )
