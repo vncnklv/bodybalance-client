@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 export const useToken = () => {
     const [token, setTokenState] = useState(null);
     const [hasToken, setHasToken] = useState(false);
+    const [tokenIsLoading, setTokenIsLoading] = useState(true);
 
     useEffect(() => {
         const value = localStorage.getItem('token');
@@ -12,6 +13,7 @@ export const useToken = () => {
         } else {
             localStorage.clear();
         }
+        setTokenIsLoading(false);
     }, []);
 
     const removeToken = () => {
@@ -26,5 +28,5 @@ export const useToken = () => {
         setTokenState(() => t);
     }
 
-    return { hasToken, token, setToken, removeToken }
+    return { hasToken, token, setToken, removeToken, tokenIsLoading }
 };

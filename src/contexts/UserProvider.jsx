@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isAuth, setIsAuth] = useState(undefined);
     const [isLoading, setIsLoading] = useState(true);
-    const { hasToken, setToken, removeToken } = useToken();
+    const { tokenIsLoading, hasToken, setToken, removeToken } = useToken();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,10 +33,10 @@ export const AuthProvider = ({ children }) => {
             });
         }
 
-        if (!hasToken) {
+        if (!hasToken && !tokenIsLoading) {
             setIsLoading(false);
         }
-    }, [hasToken, removeToken, user, navigate]);
+    }, [hasToken, removeToken, user, navigate, tokenIsLoading]);
 
     const login = async (userData) => {
         try {
