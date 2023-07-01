@@ -20,20 +20,21 @@ function App() {
 
   return (
     <>
-          <Header />
+      <Header />
       <main className="max-w-screen-lg m-auto">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-            <Route path="/logout" element={<ProtectedRoute  ><Logout /></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute ><Dashboard /></ProtectedRoute>} />
-            <Route path="/body-information" element={<ProtectedRoute ><BodyInformation /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute ><Profile /></ProtectedRoute>} />
+          <Route path="/logout" element={<ProtectedRoute  ><Logout /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute ><Dashboard /></ProtectedRoute>} />
+          <Route path="/add-food/:diaryId" element={<ProtectedRoute ><FoodList /></ProtectedRoute>} />
+          <Route path="/body-information" element={<ProtectedRoute ><BodyInformation /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute ><Profile /></ProtectedRoute>} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
     </>
   )
