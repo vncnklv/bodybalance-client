@@ -11,13 +11,11 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isAuth) {
-            getDiary()
-                .then(res => { setDiary(() => res) })
-                .catch(err => console.log(err));
+    useEffect(() => {
+        if(!promiseInProgress && userGoals.calories === 0) {
+            navigate('/set-body-info');
         }
-
-    }, [isAuth, navigate]);
+    }, [navigate, promiseInProgress, userGoals.calories]);
 
     const deleteFoodFromMeal = async (foodId, meal) => {
         const res = await deleteFood(diary._id, foodId, meal);

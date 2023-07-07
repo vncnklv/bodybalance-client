@@ -12,6 +12,7 @@ import BodyInformation from "./pages/BodyInformation"
 import Profile from "./pages/Profile"
 import FoodList from "./pages/FoodList/FoodList";
 import { useAuth } from "./contexts/UserProvider";
+import Goals from "./pages/Goals"
 
 function App() {
   const { isLoading } = useAuth();
@@ -32,6 +33,8 @@ function App() {
           <Route path="/add-food/:diaryId" element={<ProtectedRoute ><FoodList /></ProtectedRoute>} />
           <Route path="/body-information" element={<ProtectedRoute ><BodyInformation /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute ><Profile /></ProtectedRoute>} />
+          <Route path="/set-goals" element={<ProtectedRoute ><Goals /></ProtectedRoute>} />
+          <Route path="/set-body-info" element={<ProtectedRoute ><BodyInformation /></ProtectedRoute>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
