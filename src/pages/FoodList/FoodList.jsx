@@ -8,7 +8,7 @@ import { getFoods } from "../../services/meals";
 import FoodItem from "./FoodItem";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
 import Pager from "./Pager";
-import FoodDescription from "./FoodDescription";
+import FoodDescription from "../../components/FoodDescription";
 import { useParams } from "react-router-dom";
 
 export default function FoodList() {

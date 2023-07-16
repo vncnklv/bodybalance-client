@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Pie, PieChart, Tooltip } from "recharts";
-import { addFoodToDiary } from "../../services/meals";
+import { addFoodToDiary, updateFoodInDiary } from "../services/meals";
 import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
-export default function FoodDescription({ food, setActiveFood, diaryId }) {
-    const [quantity, setQuantity] = useState(1);
-    const [meal, setMeal] = useState("");
+export default function FoodDescription({ food, setActiveFood, diaryId, currentQuantity, mealName, _id, deleteFoodFromMeal, setDiary }) {
+    const [quantity, setQuantity] = useState(currentQuantity || 1);
+    const [meal, setMeal] = useState(mealName || "");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const nutrientsData = [
@@ -16,10 +17,26 @@ export default function FoodDescription({ food, setActiveFood, diaryId }) {
     ];
 
     const addFood = async (redirect) => {
-        await addFoodToDiary(diaryId, meal, quantity, food._id);
-        if (redirect) {
-            navigate('/dashboard')
+        try {
+            await addFoodToDiary(diaryId, meal, quantity, food._id);
+            setError('');
+            if (redirect) {
+                navigate('/dashboard')
+            }
+        } catch (err) {
+            setError(err.message);
         }
+    }
+
+    const updateFood = async () => {
+        const updatedDiary = await updateFoodInDiary(diaryId, mealName, _id, { quantity, meal });
+        setDiary(() => updatedDiary);
+        setActiveFood(() => ({}))
+    }
+
+    const deleteFood = () => {
+        deleteFoodFromMeal(_id, meal);
+        setActiveFood(() => ({}));
     }
 
     return (
@@ -67,7 +84,7 @@ export default function FoodDescription({ food, setActiveFood, diaryId }) {
                             <label className="text-sm" htmlFor="meal">Meal:</label>
                             <select
                                 name="meal"
-                                className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                className={`shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${error && "border-red-700"}`}
                                 onChange={e => setMeal(e.target.value)}
                                 value={meal}
                             >
@@ -81,10 +98,18 @@ export default function FoodDescription({ food, setActiveFood, diaryId }) {
                     </div>
 
 
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 justify-between mt-3">
                         <span className="px-5 py-1 bg-red-500 text-white  hover:cursor-pointer" onClick={() => setActiveFood({})}>Cancel</span>
-                        <span className="px-5 py-1 bg-secondary text-white  hover:cursor-pointer" onClick={() => addFood()}>Add</span>
-                        <span className="px-5 py-1 bg-primary text-white  hover:cursor-pointer" onClick={() => addFood(true)}>Add & Finish</span>
+                        {_id
+                            ? <>
+                                <span className="px-5 py-1 bg-red-500 text-white  hover:cursor-pointer" onClick={() => deleteFood()}>Delete</span>
+                                <span className="px-5 py-1 bg-primary text-white  hover:cursor-pointer" onClick={() => updateFood()}>Update</span>
+                            </>
+                            : <>
+                                <span className="px-5 py-1 bg-secondary text-white  hover:cursor-pointer" onClick={() => addFood()}>Add</span>
+                                <span className="px-5 py-1 bg-primary text-white  hover:cursor-pointer" onClick={() => addFood(true)}>Add & Finish</span>
+                            </>
+                        }
                     </div>
                 </div>
 
