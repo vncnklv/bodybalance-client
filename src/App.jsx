@@ -13,6 +13,7 @@ import Profile from "./pages/Profile"
 import FoodList from "./pages/FoodList/FoodList";
 import { useAuth } from "./contexts/UserProvider";
 import Goals from "./pages/Goals"
+import ChangePassoword from "./pages/Profile/ChangePassword"
 
 function App() {
   const { isLoading } = useAuth();
@@ -35,6 +36,7 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute ><Profile /></ProtectedRoute>} />
           <Route path="/set-goals" element={<ProtectedRoute ><Goals /></ProtectedRoute>} />
           <Route path="/set-body-info" element={<ProtectedRoute ><BodyInformation /></ProtectedRoute>} />
+          <Route path="/change-password" element={<ProtectedRoute ><ChangePassoword /></ProtectedRoute>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
