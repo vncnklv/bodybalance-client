@@ -4,12 +4,12 @@ import { addFoodToDiary, updateFoodInDiary } from "../services/meals";
 import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
-export default function FoodDescription({ food, setActiveFood, diaryId, currentQuantity, mealName, _id, deleteFoodFromMeal, setDiary }) {
+export default function FoodDescription({ food, setActiveFood, diaryId, currentQuantity, mealName, _id, deleteFoodFromMeal, setDiary, date }) {
     const [quantity, setQuantity] = useState(currentQuantity || 1);
     const [meal, setMeal] = useState(mealName || "");
     const [error, setError] = useState("");
     const navigate = useNavigate();
-
+    
     const nutrientsData = [
         { name: 'Carbohydrates', value: Number((food.carbohydrates * quantity).toFixed(1)) },
         { name: 'Fats', value: Number((food.fats * quantity).toFixed(1)) },
@@ -21,7 +21,7 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
             await addFoodToDiary(diaryId, meal, quantity, food._id);
             setError('');
             if (redirect) {
-                navigate('/dashboard')
+                navigate('/dashboard', { state: { date } });
             }
         } catch (err) {
             setError(err.message);

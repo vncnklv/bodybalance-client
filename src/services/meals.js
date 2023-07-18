@@ -1,7 +1,7 @@
 import { del, get, patch, post } from "./requester"
 
-export const getDiary = async () => {
-    return get('/diary');
+export const getDiary = async (date) => {
+    return get(`/diary${date ? `?date=${encodeURIComponent(date)}` : ''}`);
 }
 
 export const deleteFood = (diaryId, foodId, meal) => {

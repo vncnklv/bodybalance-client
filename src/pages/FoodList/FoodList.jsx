@@ -9,7 +9,7 @@ import FoodItem from "./FoodItem";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
 import Pager from "./Pager";
 import FoodDescription from "../../components/FoodDescription";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 export default function FoodList() {
     const [foods, setFoods] = useState([]);
@@ -19,6 +19,7 @@ export default function FoodList() {
     const [search, setSearch] = useState('');
 
     const { diaryId } = useParams();
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         trackPromise(
@@ -66,7 +67,7 @@ export default function FoodList() {
                     </>
                 }
             </div>
-            {Object.keys(activeFood).length !== 0 && <FoodDescription key={activeFood._id} food={activeFood} setActiveFood={setActiveFood} diaryId={diaryId} />}
+            {Object.keys(activeFood).length !== 0 && <FoodDescription key={activeFood._id} food={activeFood} setActiveFood={setActiveFood} diaryId={diaryId} date={searchParams.get('date')} />}
         </>
     )
 }
