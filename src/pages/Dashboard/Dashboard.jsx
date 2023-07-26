@@ -86,7 +86,7 @@ export default function Dashboard() {
                     setDiary={setDiary}
                 />}
 
-            <Nutrients diary={diary} goals={userGoals} />
+            {diary.calories > 0 && <Nutrients diary={diary} goals={userGoals} />}
         </>
 
     )
