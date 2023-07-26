@@ -1,4 +1,4 @@
-import { get, post } from "./requester";
+import { get, patch, post } from "./requester";
 
 export const loginUser = async (userData) => {
     return post('/signin', userData);
@@ -22,4 +22,16 @@ export const getUserGoals = async () => {
 
 export const setGoal = async (data) => {
     return post('/setUserGoal', data);
+}
+
+export const changePassword = async (data) => {
+    return post('/changePassword', data);
+}
+
+export const getUserFoods = async (page, search) => {
+    return get(`/user/foods?page=${page}&search=${search}`);
+}
+
+export const updateUserGoals = async (data) => {
+    return patch('/user/goals', data);
 }

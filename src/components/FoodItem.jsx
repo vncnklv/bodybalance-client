@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import foodIcon from '../../assets/broccoli.png';
+import foodIcon from '../assets/broccoli.png';
 
 export default function FoodItem({ food, setActiveFood }) {
     return (

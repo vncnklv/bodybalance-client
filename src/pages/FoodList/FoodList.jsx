@@ -5,9 +5,9 @@
 import { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom"
 import { getFoods } from "../../services/meals";
-import FoodItem from "./FoodItem";
+import FoodItem from "../../components/FoodItem";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
-import Pager from "./Pager";
+import Pager from "../../components/Pager";
 import FoodDescription from "../../components/FoodDescription";
 import { useParams, useSearchParams } from "react-router-dom";
 
