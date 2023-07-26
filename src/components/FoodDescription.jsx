@@ -9,7 +9,7 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
     const [meal, setMeal] = useState(mealName || "");
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    
+
     const nutrientsData = [
         { name: 'Carbohydrates', value: Number((food.carbohydrates * quantity).toFixed(1)) },
         { name: 'Fats', value: Number((food.fats * quantity).toFixed(1)) },
@@ -60,12 +60,39 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
 
 
                 <div className="m-auto">
-                    <p>Calories: {(food.calories * quantity).toFixed(1)} kcal</p>
-                    <p>Protein: {(food.protein * quantity).toFixed(1)} g</p>
-                    <p>Carbohydrates: {(food.carbohydrates * quantity).toFixed(1)} g</p>
-                    <p>Fats: {(food.fats * quantity).toFixed(1)} g</p>
-                    {food.fiber && <p>Fiber: {(food.fiber * quantity).toFixed(1)} g</p>}
-                    {food.cholesterol && <p>Cholesterol: {(food.cholestero * quantity).toFixed(1)}</p>}
+    
+                    <div className="flex flex-col gap-8 text-gray-800 pb-5 text-center">
+                        <div className="flex justify-evenly gap-6">
+                            <div className="flex flex-col">
+                                <span className="text-xs font-light">PROTEIN</span>
+                                <span className="text-xl font-medium">{(food.protein * quantity).toFixed(1)} g</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-xs font-light">FATS</span>
+                                <span className="text-xl font-medium">{(food.fats * quantity).toFixed(1)} g</span>
+
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-xs font-light">CARBS</span>
+                                <span className="text-xl font-medium">{(food.carbohydrates * quantity).toFixed(1)} g</span>
+                            </div>
+                        </div>
+                        <div className="flex justify-evenly gap-6">
+                            <div className="flex flex-col">
+                                <span className="text-xs font-light">CALORIES</span>
+                                <span className="text-xl font-medium">{(food.calories * quantity).toFixed(1)}</span>
+                            </div>
+
+                            {food.fiber && <div className="flex flex-col">
+                                <span className="text-xs font-light">FIBER</span>
+                                <span className="text-xl font-medium">{(food.fiber * quantity).toFixed(1)}</span>
+                            </div>}
+                            {food.cholesterol && <div className="flex flex-col">
+                                <span className="text-xs font-light">CHOLESTEROL</span>
+                                <span className="text-xl font-medium">{(food.cholestero * quantity).toFixed(1)}</span>
+                            </div>}
+                        </div>
+                    </div>
                 </div>
 
                 <div>
