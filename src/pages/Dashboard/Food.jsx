@@ -20,7 +20,7 @@ export default function Food({ data: { quantity, food, _id }, deleteHandler, onF
                     <img src={binIcon} alt="bin icon" />
                 </div>
             </div>
-            <hr />
+           
         </>
     )
 }
