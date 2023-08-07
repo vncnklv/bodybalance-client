@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
 export default function FoodDescription({ food, setActiveFood, diaryId, currentQuantity, mealName, _id, deleteFoodFromMeal, setDiary, date }) {
-    const [quantity, setQuantity] = useState(currentQuantity || 1);
+    const [quantity, setQuantity] = useState(currentQuantity || 100);
     const [meal, setMeal] = useState(mealName || "");
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -18,7 +18,7 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
 
     const addFood = async (redirect) => {
         try {
-            await addFoodToDiary(diaryId, meal, quantity, food._id);
+            await addFoodToDiary(diaryId, meal, quantity / 100, food._id);
             setError('');
             if (redirect) {
                 navigate('/dashboard', { state: { date } });
@@ -60,37 +60,52 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
 
 
                 <div className="m-auto">
-    
+
                     <div className="flex flex-col gap-8 text-gray-800 pb-5 text-center">
                         <div className="flex justify-evenly gap-6">
                             <div className="flex flex-col">
                                 <span className="text-xs font-light">PROTEIN</span>
-                                <span className="text-xl font-medium">{(food.protein * quantity).toFixed(1)} g</span>
+                                <span className="text-xl font-medium">{(food.protein * quantity / 100).toFixed(1)} g</span>
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-xs font-light">FATS</span>
-                                <span className="text-xl font-medium">{(food.fats * quantity).toFixed(1)} g</span>
+                                <span className="text-xl font-medium">{(food.fats * quantity / 100).toFixed(1)} g</span>
 
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-xs font-light">CARBS</span>
-                                <span className="text-xl font-medium">{(food.carbohydrates * quantity).toFixed(1)} g</span>
+                                <span className="text-xl font-medium">{(food.carbohydrates * quantity / 100).toFixed(1)} g</span>
                             </div>
                         </div>
                         <div className="flex justify-evenly gap-6">
                             <div className="flex flex-col">
                                 <span className="text-xs font-light">CALORIES</span>
-                                <span className="text-xl font-medium">{(food.calories * quantity).toFixed(1)}</span>
+                                <span className="text-xl font-medium">{(food.calories * quantity/ 100).toFixed(1)}</span>
                             </div>
 
-                            {food.fiber && <div className="flex flex-col">
-                                <span className="text-xs font-light">FIBER</span>
-                                <span className="text-xl font-medium">{(food.fiber * quantity).toFixed(1)}</span>
-                            </div>}
-                            {food.cholesterol && <div className="flex flex-col">
-                                <span className="text-xs font-light">CHOLESTEROL</span>
-                                <span className="text-xl font-medium">{(food.cholestero * quantity).toFixed(1)}</span>
-                            </div>}
+                            {food.fiber && food.fiber !== 0
+                                ? <div className="flex flex-col">
+                                    <span className="text-xs font-light">FIBER</span>
+                                    <span className="text-xl font-medium">{(food.fiber * quantity / 100).toFixed(1)}</span>
+                                </div>
+                                : ''
+                            }
+
+                            {food.cholesterol && food.cholesterol !== 0
+                                ? <div className="flex flex-col">
+                                    <span className="text-xs font-light">CHOLESTEROL</span>
+                                    <span className="text-xl font-medium">{(food.cholesterol * quantity / 100).toFixed(1)}</span>
+                                </div>
+                                : ''
+                            }
+
+                            {food.sugar && food.sugar != 0
+                                ? <div className="flex flex-col">
+                                    <span className="text-xs font-light">SUGAR</span>
+                                    <span className="text-xl font-medium">{(food.sugar * quantity / 100).toFixed(1)}</span>
+                                </div>
+                                : ''
+                            }
                         </div>
                     </div>
                 </div>
@@ -98,7 +113,7 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
                 <div>
                     <div className="flex flex-col items-center gap-1 mb-1">
                         <div className="w-full">
-                            <label className="text-sm" htmlFor="quantity">Quantity: </label>
+                            <label className="text-sm" htmlFor="quantity">Quantity in grams: </label>
                             <input type="number" name="quantity"
                                 className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={e => setQuantity(e.target.value)}
