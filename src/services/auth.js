@@ -35,3 +35,11 @@ export const getUserFoods = async (page, search) => {
 export const updateUserGoals = async (data) => {
     return patch('/user/goals', data);
 }
+
+export const addUserWeight = async (data) => {
+    return post('/user/weight', data);
+}
+
+export const getUserWeightIns = async () => {
+    return get('/user/weight');
+}
