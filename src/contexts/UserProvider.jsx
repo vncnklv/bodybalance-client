@@ -65,8 +65,17 @@ export const AuthProvider = ({ children }) => {
         setUser(() => null)
     }
 
+    const refreshUser = async () => {
+        try {
+            const data = await getUser();
+            setUser(() => data);
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    }
+
     return (
-        <Context.Provider value={{ isAuth, user, login, register, logout, isLoading }}>
+        <Context.Provider value={{ isAuth, user, login, register, logout, isLoading, refreshUser }}>
             {children}
         </Context.Provider>
     )
