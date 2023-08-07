@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
 import { getUserGoals, updateUserGoals } from "../../services/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Goals() {
     const [userGoals, setUserGoals] = useState({});
     const [isUpdate, setIsUpdate] = useState(false);
+    const navigate = useNavigate();
 
     const { promiseInProgress } = usePromiseTracker({ area: 'profile' });
 
@@ -17,6 +19,12 @@ export default function Goals() {
                 }),
             'profile');
     }, []);
+
+    useEffect(() => {
+        if (!promiseInProgress && userGoals.calories === 0) {
+            navigate('/set-body-info');
+        }
+    }, [navigate, promiseInProgress, userGoals.calories]);
 
     const onSave = async () => {
         const data = {
@@ -45,8 +53,8 @@ export default function Goals() {
             <div className="flex justify-between mx-10 py-5">
                 <span className="text-xl font-medium text-gray-800">Goals</span>
                 {isUpdate
-                    ? <span className="px-4 py-1 bg-secondary text-white" onClick={onSave}>Save</span>
-                    : <span className="px-4 py-1 bg-secondary text-white" onClick={() => setIsUpdate(prev => !prev)}>Update</span>
+                    ? <span className="px-4 py-1 bg-secondary text-white hover:cursor-pointer" onClick={onSave}>Save</span>
+                    : <span className="px-4 py-1 bg-secondary text-white hover:cursor-pointer" onClick={() => setIsUpdate(prev => !prev)}>Update</span>
                 }
             </div>
 
@@ -62,7 +70,7 @@ export default function Goals() {
                         <div className="flex flex-col">
                             <span className="text-xs font-light">PROTEIN</span>
                             {isUpdate
-                                ? <input type="number" name="protein" className="w-14 border rounded text-center text-xl font-medium" value={userGoals.protein} onChange={changeHandler} step={5}/>
+                                ? <input type="number" name="protein" className="w-14 border rounded text-center text-xl font-medium" value={userGoals.protein} onChange={changeHandler} />
                                 : <span className="text-xl font-medium">{userGoals.protein}</span>
                             }
 
@@ -70,7 +78,7 @@ export default function Goals() {
                         <div className="flex flex-col">
                             <span className="text-xs font-light">FATS</span>
                             {isUpdate
-                                ? <input type="number" name="fats" className="w-14 border rounded text-center text-xl font-medium" value={userGoals.fats} onChange={changeHandler} step={5}/>
+                                ? <input type="number" name="fats" className="w-14 border rounded text-center text-xl font-medium" value={userGoals.fats} onChange={changeHandler} />
                                 : <span className="text-xl font-medium">{userGoals.fats}</span>
                             }
 
@@ -79,7 +87,7 @@ export default function Goals() {
                             <span className="text-xs font-light">CARBS</span>
 
                             {isUpdate
-                                ? <input type="number" name="carbohydrates" className="w-14 border rounded text-center text-xl font-medium" value={userGoals.carbohydrates} onChange={changeHandler} step={5}/>
+                                ? <input type="number" name="carbohydrates" className="w-14 border rounded text-center text-xl font-medium" value={userGoals.carbohydrates} onChange={changeHandler} />
                                 : <span className="text-xl font-medium">{userGoals.carbohydrates}</span>
                             }
                         </div>
