@@ -1,16 +1,19 @@
 import userIcon from "../../assets/user_icon.png";
-import { deleteUser, demoteTrainer  } from "../../services/auth";
+import { deleteUser, demoteTrainer } from "../../services/auth";
 
 /* eslint-disable react/prop-types */
-export default function UserItem({ user, setActiveUser }) {
-    const onDemote = async (e) =>  {
+export default function UserItem({ user, setActiveUser, refreshUsers}) {
+    
+    const onDemote = async (e) => {
         e.stopPropagation();
         await demoteTrainer(user._id);
+        await refreshUsers();
     }
 
     const onDelete = async (e) => {
         e.stopPropagation();
         await deleteUser(user._id);
+        await refreshUsers();
     }
 
     return (
@@ -21,7 +24,7 @@ export default function UserItem({ user, setActiveUser }) {
                     <span>{user.name} {user.lastName} - {user.username} - {user.role}</span>
                 </div>
                 <div className="flex gap-2">
-                    {user.role === "trainer" && <span className="bg-orange-400 text-white px-1 hover:cursor-pointer" onClick={onDemote}>Demote</span>}
+                    {user.role === "trainer" && <span className="bg-orange-500 text-white px-1 hover:cursor-pointer" onClick={onDemote}>Demote</span>}
                     <span className="bg-red-500 text-white px-1 hover:cursor-pointer" onClick={onDelete}>Delete</span>
                 </div>
             </div>

@@ -14,8 +14,13 @@ export default function TrainerCard({ trainer }) {
     }
 
     return (
-        <div className="shadow-md mb-10 flex justify-around p-12 gap-10">
-            <div className="flex flex-col gap-5">
+        <div className="shadow-md mb-10 pb-10">
+            <div className="flex flex-row justify-between mx-10 py-10">
+                <span className="text-xl font-medium text-gray-800">{trainer.username}</span>
+                <span className="px-4 py-1 bg-secondary text-white" onClick={onHire}>Hire</span>
+            </div>
+
+            <div className="flex flex-row gap-10 px-12">
                 <div className="h-full flex flex-col justify-between">
                     <div className="flex flex-col gap-5">
                         <div className="flex flex-col">
@@ -36,14 +41,10 @@ export default function TrainerCard({ trainer }) {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <span className="px-5 py-2 bg-secondary text-white  hover:cursor-pointer" onClick={onHire}>Hire</span>
+                <div className="flex flex-col">
+                    <span className="text-xs font-light">DESCRIPTION</span>
+                    <span className="text-l font-medium text-justify">{trainer.description}</span>
                 </div>
-
-            </div>
-            <div className="flex flex-col">
-                <span className="text-xs font-light">DESCRIPTION</span>
-                <span className="text-l font-medium">{trainer.description}</span>
             </div>
         </div>
     );

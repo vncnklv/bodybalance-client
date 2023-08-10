@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
 import { useAuth } from "../../contexts/UserProvider";
 import { useNavigate } from "react-router-dom";
 import Pager from "../../components/Pager";
-import { getAllUsers } from "../../services/auth";
 import UserItem from "./UserItem";
 import Loader from "../../components/Loader";
+import UserCard from "./UserCard";
+import { getAllUsers } from "../../services/auth";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
@@ -17,9 +18,7 @@ export default function UserList() {
     const { user } = useAuth();
     const { promiseInProgress } = usePromiseTracker({ area: 'users' });
 
-    useEffect(() => {
-        if (user?.role !== 'admin') navigate('/dashboard');
-
+    const getUsers = useCallback(() => {
         trackPromise(
             getAllUsers(pages.page, search)
                 .then(res => {
@@ -31,7 +30,15 @@ export default function UserList() {
                 })
                 .catch(err => console.log(err)),
             'users')
-    }, [navigate, pages.page, search, user?.role]);
+    }, [pages.page, search])
+
+    useEffect(() => {
+        if (user?.role !== 'admin') navigate('/dashboard');
+
+        getUsers();
+    }, [getUsers, navigate, user?.role]);
+
+
 
     const goToPage = (page) => {
         setPages(() => ({ page }))
@@ -59,14 +66,14 @@ export default function UserList() {
                         <div className="px-16 py-2">
                             {users.length == 0
                                 ? <span>No users found!</span>
-                                : users.map(user => <UserItem key={user._id} user={user} setActiveTrainer={setActiveUser} />)
+                                : users.map(user => <UserItem key={user._id} user={user} setActiveUser={setActiveUser} refreshUsers={getUsers} />)
                             }
                         </div>
                         <Pager {...pages} goToPage={goToPage} />
                     </>
                 }
             </div>
-            {activeUser._id && <UserCard trainer={setActiveUser} />}
+            {activeUser?._id && <UserCard user={activeUser} refreshUsers={getUsers} setActiveUser={setActiveUser} />}
         </>
     )
 }
