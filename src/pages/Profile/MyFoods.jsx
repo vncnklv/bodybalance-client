@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
 import { getUserFoods } from "../../services/auth";
 import FoodItem from "../../components/FoodItem";
@@ -15,9 +15,8 @@ export default function MyFoods() {
     const [activeFood, setActiveFood] = useState({});
 
     const { promiseInProgress } = usePromiseTracker({ area: 'myFoods' });
-    // reload foods when a food is deleted
 
-    useEffect(() => {
+    const getFoods = useCallback(() => {
         trackPromise(
             getUserFoods(pages.page, search)
                 .then(res => {
@@ -27,8 +26,14 @@ export default function MyFoods() {
                         nextPage: res.nextPage || false
                     }));
                 }),
-            'myFoods');
-    }, [pages.page, search]);
+            'myFoods')
+    },
+        [pages.page, search]
+    );
+
+    useEffect(() => {
+        getFoods();
+    }, [getFoods, pages.page, search]);
 
     const goToPage = (page) => {
         setPages(() => ({ page }))
@@ -69,7 +74,7 @@ export default function MyFoods() {
                 </div>
                 {!promiseInProgress && foods.length > 0 && <Pager {...pages} goToPage={goToPage} />}
             </div>
-            {Object.keys(activeFood).length !== 0 && <FoodEditor food={activeFood} removeActiveFood={removeActiveFood} />}
+            {Object.keys(activeFood).length !== 0 && <FoodEditor food={activeFood} removeActiveFood={removeActiveFood} refreshFoods={getFoods} />}
         </>
     )
 }

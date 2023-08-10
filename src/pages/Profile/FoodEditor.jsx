@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { deleteFoodItem } from "../../services/meals";
 
 /* eslint-disable react/prop-types */
-export default function FoodEditor({ food, removeActiveFood }) {
+export default function FoodEditor({ food, removeActiveFood, refreshFoods }) {
     const [activeFood, setActiveFood] = useState({
         name: '',
         calories: 0,
@@ -35,8 +35,9 @@ export default function FoodEditor({ food, removeActiveFood }) {
     const deleteHandler = async () => {
         const result = confirm('Are you sure you want to delete this food?');
 
-        if (result){
+        if (result) {
             await deleteFoodItem(activeFood._id);
+            await refreshFoods();
             removeActiveFood();
         }
     }
