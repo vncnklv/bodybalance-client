@@ -2,18 +2,26 @@ import userIcon from "../../assets/user_icon.png";
 import { deleteUser, demoteTrainer } from "../../services/auth";
 
 /* eslint-disable react/prop-types */
-export default function UserItem({ user, setActiveUser, refreshUsers}) {
-    
+export default function UserItem({ user, setActiveUser, refreshUsers }) {
+
     const onDemote = async (e) => {
         e.stopPropagation();
-        await demoteTrainer(user._id);
-        await refreshUsers();
+        const result = confirm(`Are you sure you want to demote user ${user.username}?`);
+
+        if (result) {
+            await demoteTrainer(user._id);
+            await refreshUsers();
+        }
     }
 
     const onDelete = async (e) => {
         e.stopPropagation();
-        await deleteUser(user._id);
-        await refreshUsers();
+        const result = confirm(`Are you sure you want to delete user ${user.username}?`);
+
+        if (result) {
+            await deleteUser(user._id);
+            await refreshUsers();
+        }
     }
 
     return (
