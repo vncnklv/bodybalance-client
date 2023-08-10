@@ -9,6 +9,7 @@ import FoodDescription from "../../components/FoodDescription";
 import { getUserGoals } from "../../services/auth";
 import { deleteFood, getDiary } from "../../services/meals";
 import Dater from "./Dater";
+import Loader from "../../components/Loader";
 
 export default function Dashboard() {
     const [diary, setDiary] = useState({});
@@ -68,7 +69,7 @@ export default function Dashboard() {
                             <Dater date={date} setDate={setDate} />
                         </>
                     }</>
-                    : <span>Loading</span>
+                    : <div className="py-28"><Loader /></div>
                 }
 
             </div>

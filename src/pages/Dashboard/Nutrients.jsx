@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { usePromiseTracker } from "react-promise-tracker";
 import { Cell, Pie, PieChart, Tooltip } from "recharts";
+import Loader from "../../components/Loader";
 
 export default function Nutrients({ diary, goals }) {
     const { promiseInProgress } = usePromiseTracker({ area: 'diary' });
@@ -98,7 +99,7 @@ export default function Nutrients({ diary, goals }) {
                         </div>
                     </div>
                     : <span>Add some food first!</span>
-                : <span>Loading</span>
+                : <div className="py-16"><Loader /></div>
             }
 
         </div>

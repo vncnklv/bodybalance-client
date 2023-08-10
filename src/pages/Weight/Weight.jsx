@@ -3,18 +3,22 @@ import AddWeight from "./AddWeight";
 import WeeklyInfo from "./WeeklyInfo";
 import WeightChart from "./WeightChart";
 import { getUserWeightIns } from "../../services/auth";
+import { trackPromise } from "react-promise-tracker";
 
 export default function Weight() {
     const [weightIns, setWeightIns] = useState([]);
 
     useEffect(() => {
-        updateUserWeightIns();
+        updateUserWeightIns()
     }, [])
 
     const updateUserWeightIns = () => {
-        getUserWeightIns()
-            .then(res => setWeightIns(res.sort((a, b) => new Date(a.date) - new Date(b.date))))
-            .catch(err => console.log(err));
+        trackPromise(
+            getUserWeightIns()
+                .then(res => setWeightIns(res.sort((a, b) => new Date(a.date) - new Date(b.date))))
+                .catch(err => console.log(err)),
+            'weight'
+        )
     }
 
     return (

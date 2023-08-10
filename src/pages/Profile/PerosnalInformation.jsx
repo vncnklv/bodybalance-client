@@ -15,7 +15,7 @@ export default function PersonalInformation() {
             </div>
 
             <div className="flex justify-evenly text-gray-800 pb-5">
-                {!user.trainter && <div className="flex flex-col">
+                {user.trainer === null && <div className="flex flex-col">
                     <span className="text-xs font-light">USERNAME</span>
                     <span className="font-medium">{user.username}</span>
                 </div>}
@@ -29,11 +29,9 @@ export default function PersonalInformation() {
                 </div>
                 {user.trainer && <div className="flex flex-col">
                     <span className="text-xs font-light">TRAINER</span>
-                    <span className="font-medium">Test Testov</span>
+                    <span className="font-medium">{user.trainer.name} {user.trainer.lastName}</span>
                 </div>}
             </div>
-
-
         </div>
     )
 }

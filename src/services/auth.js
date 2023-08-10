@@ -1,4 +1,4 @@
-import { get, patch, post } from "./requester";
+import { del, get, patch, post } from "./requester";
 
 export const loginUser = async (userData) => {
     return post('/signin', userData);
@@ -43,3 +43,40 @@ export const addUserWeight = async (data) => {
 export const getUserWeightIns = async () => {
     return get('/user/weight');
 }
+
+export const getAllTrainers = async (page, search) => {
+    return get('/user/trainers?page=' + page + '&search=' + search);
+}
+
+export const becomeTrainer = async (data) => {
+    return post('/becomeTrainer', data);
+}
+
+export const getTrainerClients = async (page, search) => {
+    return get('/user/clients?page=' + page + '&search=' + search);
+}
+
+export const hireTrainer = async (data) => {
+    return post('/user/trainer', data);
+}
+
+export const fireTrainer = async () => {
+    return del('/user/trainer');
+}
+
+export const updateUserGoalsByTrainer = async (userId, data) => {
+    return patch('/user/goals/' + userId, data);
+}
+
+export const getAllUsers = async (page, search) => {
+    return get('/users?page=' + page + '&search=' + search);
+}
+
+export const demoteTrainer = async (userId) => {
+    return patch('/user/trainer/' + userId);
+}
+
+export const deleteUser = async (userId) => {
+    return del('/user/' + userId);
+}
+

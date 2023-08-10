@@ -6,6 +6,7 @@ import FoodItem from "../../components/FoodItem";
 import Pager from "../../components/Pager";
 import { Link } from "react-router-dom";
 import FoodEditor from "./FoodEditor";
+import Loader from "../../components/Loader";
 
 export default function MyFoods() {
     const [foods, setFoods] = useState([]);
@@ -57,19 +58,16 @@ export default function MyFoods() {
                 </div>
 
                 <div className="px-16 py-2">
-                    {foods.length == 0
-                        ? search
-                            ? <span>No foods found!</span>
-                            : <span>You have no foods!</span>
-                        : promiseInProgress
-                            ? <span>Loading</span>
+                    {promiseInProgress
+                        ? <div className="py-10"><Loader /></div>
+                        : foods.length === 0
+                            ? search
+                                ? <span>No foods found!</span>
+                                : <span>You have no foods!</span>
                             : foods.map(food => <FoodItem key={food._id} food={food} setActiveFood={setActiveFood} />)
-
                     }
                 </div>
-                {foods.length > 0 && <Pager {...pages} goToPage={goToPage} />}
-
-
+                {!promiseInProgress && foods.length > 0 && <Pager {...pages} goToPage={goToPage} />}
             </div>
             {Object.keys(activeFood).length !== 0 && <FoodEditor food={activeFood} removeActiveFood={removeActiveFood} />}
         </>

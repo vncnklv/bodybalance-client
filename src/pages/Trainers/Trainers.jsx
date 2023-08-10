@@ -1,38 +1,31 @@
-// implement searchbar
-// pagination
-// fetch and visualise foods
-
 import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom"
-import { getFoods } from "../../services/meals";
-import FoodItem from "../../components/FoodItem";
+import { getAllTrainers } from "../../services/auth";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
+import TrainerItem from "./TrainerItem";
 import Pager from "../../components/Pager";
-import FoodDescription from "../../components/FoodDescription";
-import { useParams, useSearchParams } from "react-router-dom";
+import TrainerCard from "./TrainerCard";
 import Loader from "../../components/Loader";
 
-export default function FoodList() {
-    const [foods, setFoods] = useState([]);
-    const [activeFood, setActiveFood] = useState({});
-    const { promiseInProgress } = usePromiseTracker({ area: 'foods' })
+export default function Trainers() {
+    const [trainers, setTrainers] = useState([]);
     const [pages, setPages] = useState({ page: 1 });
     const [search, setSearch] = useState('');
+    const [activeTrainer, setActiveTrainer] = useState({});
 
-    const { diaryId } = useParams();
-    const [searchParams] = useSearchParams();
+    const { promiseInProgress } = usePromiseTracker({ area: 'trainers' });
 
     useEffect(() => {
         trackPromise(
-            getFoods(pages.page, search)
+            getAllTrainers(pages.page, search)
                 .then(res => {
-                    setFoods(() => res.foods);
+                    setTrainers(() => res.trainers);
                     setPages(old => ({
                         ...old,
                         nextPage: res.nextPage || false
-                    }))
+                    }));
                 })
-                .catch(err => console.log(err)), 'foods')
+                .catch(err => console.log(err)),
+            'trainers')
     }, [pages.page, search]);
 
     const goToPage = (page) => {
@@ -48,7 +41,7 @@ export default function FoodList() {
     return (
         <>
             <div className="shadow-md">
-                <h2 className="text-xl font-medium text-gray-800 mx-10 py-5">Foods</h2>
+                <h2 className="text-xl font-medium text-gray-800 mx-10 py-5">Trainers</h2>
 
                 <div className="flex flex-row gap-5 px-14 items-center">
                     <input type="text" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
@@ -59,16 +52,16 @@ export default function FoodList() {
                     ? <div className="py-10"><Loader /></div>
                     : <>
                         <div className="px-16 py-2">
-                            {foods.length == 0
-                                ? <span>There is no foods found!</span>
-                                : foods.map(food => <FoodItem key={food._id} food={food} setActiveFood={setActiveFood} />)
+                            {trainers.length == 0
+                                ? <span>There is no trainers found!</span>
+                                : trainers.map(trainer => <TrainerItem key={trainer._id} trainer={trainer} setActiveTrainer={setActiveTrainer} />)
                             }
                         </div>
                         <Pager {...pages} goToPage={goToPage} />
                     </>
                 }
             </div>
-            {Object.keys(activeFood).length !== 0 && <FoodDescription key={activeFood._id} food={activeFood} setActiveFood={setActiveFood} diaryId={diaryId} date={searchParams.get('date')} />}
+            {activeTrainer._id && <TrainerCard trainer={activeTrainer} />}
         </>
     )
 }

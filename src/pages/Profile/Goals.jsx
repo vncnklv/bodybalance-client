@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
-import { getUserGoals, updateUserGoals } from "../../services/auth";
+import { fireTrainer, getUserGoals, updateUserGoals } from "../../services/auth";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/UserProvider";
+import Loader from "../../components/Loader";
 
 export default function Goals() {
     const [userGoals, setUserGoals] = useState({});
     const [isUpdate, setIsUpdate] = useState(false);
+    const { user, refreshUser } = useAuth();
     const navigate = useNavigate();
 
     const { promiseInProgress } = usePromiseTracker({ area: 'profile' });
@@ -48,20 +51,27 @@ export default function Goals() {
         });
     }
 
+    const onFireTrainer = async () => {
+        await fireTrainer();
+        await refreshUser();
+    }
+
     return (
         <div className="shadow-md pb-2 mb-10 w-full">
             <div className="flex justify-between mx-10 py-5">
                 <span className="text-xl font-medium text-gray-800">Goals</span>
-                {isUpdate
-                    ? <span className="px-4 py-1 bg-secondary text-white hover:cursor-pointer" onClick={onSave}>Save</span>
-                    : <span className="px-4 py-1 bg-secondary text-white hover:cursor-pointer" onClick={() => setIsUpdate(prev => !prev)}>Update</span>
-                }
+                <div className="flex gap-2">
+                    {!isUpdate && user.trainer && <span className="px-4 py-1 bg-secondary text-white hover:cursor-pointer" onClick={onFireTrainer}>Fire trainer</span>}
+                    {isUpdate
+                        ? <span className="px-4 py-1 bg-secondary text-white hover:cursor-pointer" onClick={onSave}>Save</span>
+                        : <span className="px-4 py-1 bg-secondary text-white hover:cursor-pointer" onClick={() => setIsUpdate(prev => !prev)}>Update</span>
+                    }
+                </div>
             </div>
 
             {promiseInProgress
-                ? <span>Loading</span>
+                ? <div className="py-1"><Loader /></div>
                 : <>
-
                     <div className="flex justify-evenly text-gray-800 pb-5 text-center">
                         <div className="flex flex-col">
                             <span className="text-xs font-light">CALORIES</span>

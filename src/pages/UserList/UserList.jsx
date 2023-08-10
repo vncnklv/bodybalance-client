@@ -1,39 +1,37 @@
-// implement searchbar
-// pagination
-// fetch and visualise foods
-
 import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom"
-import { getFoods } from "../../services/meals";
-import FoodItem from "../../components/FoodItem";
 import { trackPromise, usePromiseTracker } from "react-promise-tracker";
+import { useAuth } from "../../contexts/UserProvider";
+import { useNavigate } from "react-router-dom";
 import Pager from "../../components/Pager";
-import FoodDescription from "../../components/FoodDescription";
-import { useParams, useSearchParams } from "react-router-dom";
+import { getAllUsers } from "../../services/auth";
+import UserItem from "./UserItem";
 import Loader from "../../components/Loader";
 
-export default function FoodList() {
-    const [foods, setFoods] = useState([]);
-    const [activeFood, setActiveFood] = useState({});
-    const { promiseInProgress } = usePromiseTracker({ area: 'foods' })
+export default function UserList() {
+    const [users, setUsers] = useState([]);
     const [pages, setPages] = useState({ page: 1 });
     const [search, setSearch] = useState('');
+    const [activeUser, setActiveUser] = useState({});
 
-    const { diaryId } = useParams();
-    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const { user } = useAuth();
+    const { promiseInProgress } = usePromiseTracker({ area: 'users' });
 
     useEffect(() => {
+        if (user?.role !== 'admin') navigate('/dashboard');
+
         trackPromise(
-            getFoods(pages.page, search)
+            getAllUsers(pages.page, search)
                 .then(res => {
-                    setFoods(() => res.foods);
+                    setUsers(() => res.users);
                     setPages(old => ({
                         ...old,
                         nextPage: res.nextPage || false
-                    }))
+                    }));
                 })
-                .catch(err => console.log(err)), 'foods')
-    }, [pages.page, search]);
+                .catch(err => console.log(err)),
+            'users')
+    }, [navigate, pages.page, search, user?.role]);
 
     const goToPage = (page) => {
         setPages(() => ({ page }))
@@ -48,7 +46,7 @@ export default function FoodList() {
     return (
         <>
             <div className="shadow-md">
-                <h2 className="text-xl font-medium text-gray-800 mx-10 py-5">Foods</h2>
+                <h2 className="text-xl font-medium text-gray-800 mx-10 py-5">Users</h2>
 
                 <div className="flex flex-row gap-5 px-14 items-center">
                     <input type="text" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
@@ -59,16 +57,16 @@ export default function FoodList() {
                     ? <div className="py-10"><Loader /></div>
                     : <>
                         <div className="px-16 py-2">
-                            {foods.length == 0
-                                ? <span>There is no foods found!</span>
-                                : foods.map(food => <FoodItem key={food._id} food={food} setActiveFood={setActiveFood} />)
+                            {users.length == 0
+                                ? <span>No users found!</span>
+                                : users.map(user => <UserItem key={user._id} user={user} setActiveTrainer={setActiveUser} />)
                             }
                         </div>
                         <Pager {...pages} goToPage={goToPage} />
                     </>
                 }
             </div>
-            {Object.keys(activeFood).length !== 0 && <FoodDescription key={activeFood._id} food={activeFood} setActiveFood={setActiveFood} diaryId={diaryId} date={searchParams.get('date')} />}
+            {activeUser._id && <UserCard trainer={setActiveUser} />}
         </>
     )
 }
