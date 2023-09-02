@@ -5,8 +5,12 @@ import Loader from "../../components/Loader";
 
 export default function WeightChart({ weightIns }) {
     const { promiseInProgress } = usePromiseTracker({ area: 'weight' });
-
-    const data = weightIns.reduce((acc, curr) => {
+   
+    const data = weightIns.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateA - dateB;
+    }).reduce((acc, curr) => {
         acc.push({ date: curr.date, weight: curr.weight });
         return acc;
     }, []);

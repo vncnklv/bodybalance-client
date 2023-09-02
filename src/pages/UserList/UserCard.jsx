@@ -21,7 +21,6 @@ export default function UserCard({ user, refreshUsers, setActiveUser }) {
         }
     }
 
-
     return (
         <div className="shadow-md mb-10 p-12">
 
@@ -68,7 +67,7 @@ export default function UserCard({ user, refreshUsers, setActiveUser }) {
                 {user.role === "trainer" &&
                     <div className="flex flex-col">
                         <span className="text-xs font-light">DESCRIPTION</span>
-                        <span className="text-l font-medium text-justify">{user.description}</span>
+                        <span className="text-l text-justify">{user.description}</span>
                     </div>
                 }
 

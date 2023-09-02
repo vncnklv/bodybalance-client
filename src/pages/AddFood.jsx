@@ -20,7 +20,6 @@ export default function AddFood() {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        console.log(foodData);
         if (foodData.calories === 0) {
             return setError('Invalid food data');
         }

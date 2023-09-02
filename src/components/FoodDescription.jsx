@@ -1,19 +1,21 @@
 import { useState } from "react";
-import { Pie, PieChart, Tooltip } from "recharts";
+import { Cell, Pie, PieChart, Tooltip } from "recharts";
 import { addFoodToDiary, updateFoodInDiary } from "../services/meals";
 import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
 export default function FoodDescription({ food, setActiveFood, diaryId, currentQuantity, mealName, _id, deleteFoodFromMeal, setDiary, date }) {
-    const [quantity, setQuantity] = useState(currentQuantity || 100);
+    const [quantity, setQuantity] = useState(currentQuantity * 100 || 100);
     const [meal, setMeal] = useState(mealName || "");
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    const NUTRIENTS_COLORS = ['#0088FE', '#FFBB28', '#FF8042'];
+
     const nutrientsData = [
-        { name: 'Carbohydrates', value: Number((food.carbohydrates * quantity).toFixed(1)) },
-        { name: 'Fats', value: Number((food.fats * quantity).toFixed(1)) },
-        { name: 'Protein', value: Number((food.protein * quantity).toFixed(1)) },
+        { name: 'Carbohydrates', value: Number((food.carbohydrates * quantity / 100).toFixed(1)) },
+        { name: 'Fats', value: Number((food.fats * quantity / 100).toFixed(1)) },
+        { name: 'Protein', value: Number((food.protein * quantity / 100).toFixed(1)) },
     ];
 
     const addFood = async (redirect) => {
@@ -29,7 +31,7 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
     }
 
     const updateFood = async () => {
-        const updatedDiary = await updateFoodInDiary(diaryId, mealName, _id, { quantity, meal });
+        const updatedDiary = await updateFoodInDiary(diaryId, mealName, _id, { quantity: quantity / 100, meal });
         setDiary(() => updatedDiary);
         setActiveFood(() => ({}))
     }
@@ -43,7 +45,7 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
         <div className="shadow-md mb-10">
             <h2 className="text-xl font-medium text-gray-800 mx-10 py-5">{food.name}</h2>
             <div className="flex flex-row items-center px-10 justify-around">
-                <PieChart width={200} height={200}>
+                <PieChart width={270} height={200}>
                     <Pie
                         dataKey="value"
                         isAnimationActive={false}
@@ -51,10 +53,15 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
                         cx="50%"
                         cy="50%"
                         outerRadius={60}
-                        innerRadius={30}
+                        innerRadius={20}
                         fill="#038437"
                         label
-                    />
+                    >
+                        {nutrientsData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={NUTRIENTS_COLORS[index % NUTRIENTS_COLORS.length]} />
+                        ))}
+                    </Pie>
+
                     <Tooltip />
                 </PieChart>
 
@@ -80,13 +87,13 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
                         <div className="flex justify-evenly gap-6">
                             <div className="flex flex-col">
                                 <span className="text-xs font-light">CALORIES</span>
-                                <span className="text-xl font-medium">{(food.calories * quantity/ 100).toFixed(1)}</span>
+                                <span className="text-xl font-medium">{(food.calories * quantity / 100).toFixed(1)}</span>
                             </div>
 
                             {food.fiber && food.fiber !== 0
                                 ? <div className="flex flex-col">
                                     <span className="text-xs font-light">FIBER</span>
-                                    <span className="text-xl font-medium">{(food.fiber * quantity / 100).toFixed(1)}</span>
+                                    <span className="text-xl font-medium">{(food.fiber * quantity / 100).toFixed(1)} g</span>
                                 </div>
                                 : ''
                             }
@@ -94,7 +101,7 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
                             {food.cholesterol && food.cholesterol !== 0
                                 ? <div className="flex flex-col">
                                     <span className="text-xs font-light">CHOLESTEROL</span>
-                                    <span className="text-xl font-medium">{(food.cholesterol * quantity / 100).toFixed(1)}</span>
+                                    <span className="text-xl font-medium">{(food.cholesterol * quantity / 100).toFixed(1)} g</span>
                                 </div>
                                 : ''
                             }
@@ -102,7 +109,7 @@ export default function FoodDescription({ food, setActiveFood, diaryId, currentQ
                             {food.sugar && food.sugar != 0
                                 ? <div className="flex flex-col">
                                     <span className="text-xs font-light">SUGAR</span>
-                                    <span className="text-xl font-medium">{(food.sugar * quantity / 100).toFixed(1)}</span>
+                                    <span className="text-xl font-medium">{(food.sugar * quantity / 100).toFixed(1)} g</span>
                                 </div>
                                 : ''
                             }

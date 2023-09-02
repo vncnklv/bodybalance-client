@@ -89,7 +89,7 @@ export default function Nutrients({ diary, goals }) {
 
                                 <div className="flex flex-col">
                                     <span className="text-xs font-light">FIBER</span>
-                                    <span className="text-xl font-medium">{diary.fiber}/{goals.fiber}</span>
+                                    <span className="text-xl font-medium">{diary.fiber.toFixed(1)}/{goals.fiber}</span>
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-xs font-light">CHOLESTEROL</span>

@@ -43,7 +43,7 @@ export default function TrainerCard({ trainer }) {
                 </div>
                 <div className="flex flex-col">
                     <span className="text-xs font-light">DESCRIPTION</span>
-                    <span className="text-l font-medium text-justify">{trainer.description}</span>
+                    <span className="text-l text-justify">{trainer.description}</span>
                 </div>
             </div>
         </div>

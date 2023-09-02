@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import WeightChart from "../Weight/WeightChart"
 import WeeklyInfo from "../Weight/WeeklyInfo";
-import ClientGoals from "../Trainers/ClientGoals";
+import ClientGoals from "./ClientGoals";
 
 export default function ClientCard({ client }) {
     const [weightIns, setWeightIns] = useState([]);
